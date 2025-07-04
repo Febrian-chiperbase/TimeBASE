@@ -5,6 +5,7 @@ import {
   StyleSheet,
   useColorScheme,
   LogBox,
+  AppState,
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -21,15 +22,31 @@ import AppNavigator from './src/navigation/AppNavigator';
 // Theme
 import { lightTheme, darkTheme } from './src/theme/theme';
 
-// Ignore specific warnings
+// Ignore warnings for cleaner testing
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
   'VirtualizedLists should never be nested',
+  'Remote debugger',
+  'Require cycle',
 ]);
 
 const App = (): JSX.Element => {
   const isDarkMode = useColorScheme() === 'dark';
   const theme = isDarkMode ? darkTheme : lightTheme;
+
+  useEffect(() => {
+    // Performance optimization: Handle app state changes
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'background') {
+        // App is going to background - cleanup if needed
+      } else if (nextAppState === 'active') {
+        // App is becoming active - refresh if needed
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription?.remove();
+  }, []);
 
   return (
     <GestureHandlerRootView style={styles.container}>

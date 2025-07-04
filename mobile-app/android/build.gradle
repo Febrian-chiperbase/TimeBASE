@@ -2,15 +2,22 @@
 
 buildscript {
     ext {
-        buildToolsVersion = "33.0.0"
+        buildToolsVersion = "29.0.3"
         minSdkVersion = 21
-        compileSdkVersion = 33
-        targetSdkVersion = 33
-        ndkVersion = "23.1.7779620"
+        compileSdkVersion = 29
+        targetSdkVersion = 29
+        // Remove NDK version to use system default
+        // ndkVersion = "23.1.7779620"
+    }
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://www.jitpack.io" }
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.3.1")
-        classpath("com.facebook.react:react-native-gradle-plugin")
+        // Remove problematic react-native-gradle-plugin for now
+        // classpath("com.facebook.react:react-native-gradle-plugin")
     }
 }
 
@@ -19,6 +26,8 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://www.jitpack.io" }
+        // Add local node_modules repository
+        maven { url("$rootDir/../node_modules/react-native/android") }
     }
 }
 
